@@ -9,6 +9,7 @@
 /*   Updated: 2023/10/31 10:56:09 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
 static char	*fillstring(int counter, int minus, long number, char *str);

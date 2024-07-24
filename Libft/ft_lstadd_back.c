@@ -1,55 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear.c                                      :+:      :+:    :+:   */
+/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/06 15:17:34 by scarlucc          #+#    #+#             */
-/*   Updated: 2023/11/06 15:17:38 by scarlucc         ###   ########.fr       */
+/*   Created: 2023/11/03 16:42:29 by scarlucc          #+#    #+#             */
+/*   Updated: 2023/11/03 16:42:32 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-//#include "ft_lstadd_back.c"
 //#include "ft_lstlast.c"
 //#include "ft_lstnew.c"
 
-void	ft_lstclear(t_list **lst, void (*del)(void*))
+void	ft_lstadd_back(t_list **lst, t_list *new)
 {
-	t_list	*next_node;
+	t_list	*l_node;
 
-	if (lst && del)
+	l_node = *lst;
+	if (lst)
 	{
-		next_node = NULL;
-		while (*lst)
+		if (!*lst)
 		{
-			next_node = (*lst)-> next;
-			del((*lst)-> content);
-			free(*lst);
-			*lst = next_node;
+			*lst = new;
+			return ;
 		}
-		lst = NULL;
+		l_node = ft_lstlast(*lst);
+		l_node->next = new;
 	}
 }
-/*void delete_int(void *data)
+/*int main()
 {
-    free(data);
-}
-
-int main()
-{
+    // Crea una lista vuota
     t_list *myList = NULL;
 
-    for (int i = 1; i <= 5; i++)
+    // Aggiunge alcuni elementi alla fine della lista
+    int values[] = {1, 2, 3, 4, 5};
+    for (int i = 0; i < 5; i++)
     {
-        int *value = (int *)malloc(sizeof(int));
-        *value = i;
-        t_list *newNode = ft_lstnew(value);
+        t_list *newNode = ft_lstnew(&values[i]);
         ft_lstadd_back(&myList, newNode);
     }
 
-    printf("Lista prima della cancellazione:\n");
+    // Stampa la lista
     t_list *current = myList;
     while (current)
     {
@@ -59,10 +53,5 @@ int main()
     }
     printf("\n");
 
-    ft_lstclear(&myList, delete_int);
-
-    printf("Lista dopo la cancellazione:\n");
-    if (myList == NULL)
-        printf("La lista è vuota.\n");
     return 0;
 }*/

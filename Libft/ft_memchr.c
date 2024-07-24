@@ -9,6 +9,7 @@
 /*   Updated: 2023/10/16 15:47:32 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
 void	*ft_memchr(const void *s, int c, size_t n)

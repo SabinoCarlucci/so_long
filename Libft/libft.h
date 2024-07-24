@@ -6,17 +6,25 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 14:46:56 by scarlucc          #+#    #+#             */
-/*   Updated: 2023/10/09 14:47:08 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:11:56 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #ifndef LIBFT_H
 # define LIBFT_H
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 5
+# endif
 
 # include <stddef.h>
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdint.h>
+# include <fcntl.h>
+# include <stdarg.h>
+# include <limits.h>
 
 int			ft_atoi(const char *nptr);
 void		ft_bzero(void *s, size_t n);
@@ -52,7 +60,22 @@ void		ft_putchar_fd(char c, int fd);
 void		ft_putstr_fd(char *s, int fd);
 void		ft_putendl_fd(char *s, int fd);
 void		ft_putnbr_fd(int n, int fd);
-
+//ft_printf.c ft_printf_numbers.c
+int		ft_printf(const char *str, ...);
+void	format_check(char format, va_list *ap, int *printed);
+void	ft_putchar_printf(char c, int *printed);
+void	ft_putstr_printf(char *s, int *printed);
+void	ft_putnbr_printf(int n, int *printed);
+void	ft_uns_printf(unsigned int l, int *printed);
+void	ft_convert_hex(unsigned int number, char low_up, int *printed);
+void	ft_pointer(uintptr_t point, int *printed);
+void	ft_start_pointer(uintptr_t point, int *printed);
+//get_next_line.c
+char		*ft_strdup_mod(const char *s);
+char		*get_next_line(int fd);
+char		*read_line(int fd, char *new, char *static_buffer);
+char		*get_output(char *output);
+//Libft_bonus
 typedef struct s_list
 {
 	void			*content;

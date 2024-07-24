@@ -9,6 +9,7 @@
 /*   Updated: 2023/10/14 10:58:58 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t size)

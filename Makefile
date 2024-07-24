@@ -6,7 +6,7 @@
 #    By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/18 18:31:23 by scarlucc          #+#    #+#              #
-#    Updated: 2024/06/24 11:24:09 by scarlucc         ###   ########.fr        #
+#    Updated: 2024/07/24 18:13:49 by scarlucc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,9 @@ GREEN = '\033[0;32m'
 
 NAME = so_long
 
-BONUS_NAME = 
+BONUS_NAME = so_long_bonus
 
-SRCS = 
+SRCS = main.c
 
 BONUS = 
 
