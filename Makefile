@@ -6,7 +6,7 @@
 #    By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/18 18:31:23 by scarlucc          #+#    #+#              #
-#    Updated: 2024/07/24 18:13:49 by scarlucc         ###   ########.fr        #
+#    Updated: 2024/07/27 18:23:27 by scarlucc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ NAME = so_long
 
 BONUS_NAME = so_long_bonus
 
-SRCS = main.c
+SRCS = main.c checks.c
 
 BONUS = 
 
