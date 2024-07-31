@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:08:22 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/07/29 19:39:10 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/07/31 19:08:38 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,25 +35,12 @@ void	check_input(int argc, char **argv)
 		error_msg(ERR_OPEN);
 	line = get_next_line(fd);
 	if (!line)
-		perror("Error\n");
+		error_msg(ERR_EMPTY_OR_FOLDER);
 	free(line);
-	/* {
-		for (int i = 0; i < 8; ++i) {
-			line = get_next_line(fd);
-			if (!line)
-			{
-				perror("Error\n");
-				free(line);
-				break ;
-			}
-			ft_printf("%s", line);
-			free(line);
-		}
-	} */
 	close(fd);
 }
 
-void	check_map(char	*map_file, t_map	map_struct)
+void	check_map(char	*map_file, t_map	map)
 {
 	int		fd;
 	char	*line;
@@ -63,10 +50,70 @@ void	check_map(char	*map_file, t_map	map_struct)
 	while (line)
 	{
 		if (ft_strncmp(line, "\n", 1))
-			map_struct.rows++;
+		{
+			if (map.rows == 0)
+				map.columns = (int)ft_strlen_mod(line);
+			if ((int)ft_strlen_mod(line) != map.columns)
+			{
+				free(line);
+				error_msg(ERR_RECT);
+			}
+			map.rows++;
+		}
 		free(line);
 		line = get_next_line(fd);
 	}//se hai problemi di memoria, prova a chiamare get_next_line una volta extra per liberare buffer
-	if (map_struct.rows < 3)
+	if (map.rows < 3)//probabilemtne togliere 
 		error_msg(ERR_ROWS);
+	close(fd);
+	check_walls_and_chars(map_file, map);
+}
+
+void	check_line(char	*line, t_map map, int rows)
+{
+	char	*allowed;
+	int		l_cnt;
+	int		a_count;
+
+	l_cnt = 0;
+	while (line[l_cnt] != '\0' && line[l_cnt] != '\n')
+	{
+		a_count = 0;
+		if (!rows || rows == map.rows || !l_cnt || l_cnt == (map.columns - 1))
+			allowed = "1\0";
+		else
+			allowed = "10CEP\0";
+		while (allowed[a_count] != '\0')
+		{
+			if (line[l_cnt] == allowed[a_count])
+				break ;
+			a_count++;
+			if (allowed[a_count] == '\0')
+			{
+				free(line);
+				error_msg(ERR_CHAR);
+			}
+		}
+		l_cnt++;
+	}
+}
+
+void	check_walls_and_chars(char	*map_file, t_map	map)
+{
+	int		rows;
+	int		fd;
+	char	*line;
+
+	rows = 0;
+	fd = open(map_file, O_RDONLY);
+	line = get_next_line(fd);
+	while (rows < map.rows)
+	{
+		check_line(line, map, rows);
+		rows++;
+		free(line);
+		line = get_next_line(fd);
+	}
+	free(line);
+	close(fd);
 }

@@ -6,7 +6,7 @@
 #    By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/18 18:31:23 by scarlucc          #+#    #+#              #
-#    Updated: 2024/07/29 19:11:25 by scarlucc         ###   ########.fr        #
+#    Updated: 2024/07/31 18:48:19 by scarlucc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ BONUS_OBJS = ${BONUS: .c=.o}
 
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g
 
 LIBFT_PATH = Libft/
 LIBFT = Libft/libft.a
@@ -63,5 +63,8 @@ fclean: clean
 	@echo $(GREEN)"removed NAME and BONUS_NAME file ✓"$(NO_COLOR)
 
 re: fclean all
+
+test: re 
+	gdb ${NAME}
 
 .PHONY: all clean fclean
