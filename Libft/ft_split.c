@@ -6,75 +6,75 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/28 16:31:30 by scarlucc          #+#    #+#             */
-/*   Updated: 2023/10/28 16:31:32 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/08/08 12:17:40 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char	**clean(char **cleanthismatrix, size_t j);
-static char	**makematrix(char const *s, char c, size_t n_str, size_t i);
+//static char	**free_matrix(char **matrix, size_t sub_done);
+//static char	**make_matrix(char const *s_str, char sep, size_t n_str, int count);
 
-static char	**clean(char **cleanthismatrix, size_t j)
+char	**free_matrix(char **matrix, size_t sub_done)
 {
-	size_t	i;
+	size_t	count;
 
-	i = 0;
-	while (i <= j)
+	count = 0;
+	while (count <= sub_done)
 	{
-		free(cleanthismatrix[i]);
-		i++;
+		free(matrix[count]);
+		count++;
 	}
-	free(cleanthismatrix);
+	free(matrix);
 	return (NULL);
 }
 
-static char	**makematrix(char const *s, char c, size_t n_str, size_t i)
+char	**make_matrix(char const *s_str, char sep, size_t n_str, int count)
 {
-	char	**out;
-	size_t	j;
+	char	**matrix;
+	size_t	sub_don;
 	size_t	startsub;
 	size_t	endsub;
 
-	out = malloc(sizeof(char *) * (n_str + 1));
-	if (!out)
+	matrix = malloc(sizeof(char *) * (n_str + 1));
+	if (!matrix)
 		return (NULL);
-	out[n_str] = NULL;
-	j = 0;
-	while (j < n_str)
+	matrix[n_str] = NULL;
+	sub_don = 0;
+	while (sub_don < n_str)
 	{
-		while (s[i] == c && s[i] != '\0')
-			i++;
-		startsub = i;
-		while (s[i] != c && s[i] != '\0')
-			i++;
-		endsub = i;
-		out[j] = ft_substr(s, startsub, (endsub - startsub));
-		if (!out[j])
-			return (clean(out, j));
-		j++;
+		while (s_str[count] == sep && s_str[count] != '\0')
+			count++;
+		startsub = count;
+		while (s_str[count] != sep && s_str[count] != '\0')
+			count++;
+		endsub = count;
+		matrix[sub_don] = ft_substr(s_str, startsub, (endsub - startsub));
+		if (!matrix[sub_don])
+			return (free_matrix(matrix, sub_don));
+		sub_don++;
 	}
-	return (out);
+	return (matrix);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char const *s_str, char sep)
 {
-	size_t	i;
+	int		count;
 	size_t	n_str;
 
-	i = 0;
+	count = 0;
 	n_str = 0;
-	while (s[i] != '\0')
+	while (s_str[count] != '\0')
 	{
-		while (s[i] == c && s[i] != '\0')
-			i++;
-		if (s[i] != c && s[i] != '\0')
+		while (s_str[count] == sep && s_str[count] != '\0')
+			count++;
+		if (s_str[count] != sep && s_str[count] != '\0')
 			n_str++;
-		while (s[i] != c && s[i] != '\0')
-			i++;
+		while (s_str[count] != sep && s_str[count] != '\0')
+			count++;
 	}
-	i = 0;
-	return (makematrix(s, c, n_str, i));
+	count = 0;
+	return (make_matrix(s_str, sep, n_str, count));
 }
 //paco -s sbaglia, fai valgrind con questo main e non ci sono leak
 /*

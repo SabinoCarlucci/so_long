@@ -1,28 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/22 19:52:24 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/08/08 18:13:01 by scarlucc         ###   ########.fr       */
+/*   Created: 2024/08/09 11:26:56 by scarlucc          #+#    #+#             */
+/*   Updated: 2024/08/09 18:41:18 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-int	main(int argc, char **argv)
+int	init_mlx(void)
 {
-	t_map	*map;
-	t_map	o_map;
-	char	**map_matrix;
-	char	*line;
+	void	*mlx_ptr;
+	void	*win_ptr;
 
-	o_map = init_map_struct();
-	map = &o_map;
-	line = NULL;
-	map_matrix = check_input(argc, argv, map, line);
-	check_rect(map_matrix, *map);
+	mlx_ptr = mlx_init();
+	if (!mlx_ptr)
+		return (1);
+	win_ptr = mlx_new_window(mlx_ptr, 600, 400, "hi :)");
+	if (!win_ptr)
+		return (free(mlx_ptr), 1);
+	mlx_destroy_window(mlx_ptr, win_ptr);
+	mlx_destroy_display(mlx_ptr);
+	free(mlx_ptr);
 	return (0);
 }
+/* tentativo di aprire una finestra preso da questo sito
+
+https://reactive.so/post/42-a-comprehensive-guide-to-so_long
+ */

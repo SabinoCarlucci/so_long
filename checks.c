@@ -6,29 +6,22 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:08:22 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/07/31 19:08:38 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/08/09 18:51:17 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	error_msg(char *msg)
-{
-	ft_printf("Error\n");
-	ft_printf("%s\n", msg);
-	exit(1);
-}
-
-void	check_input(int argc, char **argv)
+char	**check_input(int argc, char **argv, t_map *map, char	*line)
 {
 	int		fd;
-	char	*line;
 	char	*point;
+	size_t	map_rows;
 
 	if (argc != 2)
 		error_msg(ERR_ARGS);
 	point = ft_strrchr(argv[1], '.');
-	if (point == NULL || ft_strncmp(point, ".ber", 4) != 0)
+	if (point == NULL || ft_strncmp(point, ".ber", 5) != 0)
 		error_msg(ERR_FORMAT);
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
@@ -36,84 +29,105 @@ void	check_input(int argc, char **argv)
 	line = get_next_line(fd);
 	if (!line)
 		error_msg(ERR_EMPTY_OR_FOLDER);
-	free(line);
-	close(fd);
-}
-
-void	check_map(char	*map_file, t_map	map)
-{
-	int		fd;
-	char	*line;
-
-	fd = open(map_file, O_RDONLY);
-	line = get_next_line(fd);
+	map_rows = 0;
 	while (line)
 	{
-		if (ft_strncmp(line, "\n", 1))
-		{
-			if (map.rows == 0)
-				map.columns = (int)ft_strlen_mod(line);
-			if ((int)ft_strlen_mod(line) != map.columns)
-			{
-				free(line);
-				error_msg(ERR_RECT);
-			}
-			map.rows++;
-		}
+		map_rows++;
 		free(line);
 		line = get_next_line(fd);
 	}//se hai problemi di memoria, prova a chiamare get_next_line una volta extra per liberare buffer
-	if (map.rows < 3)//probabilemtne togliere 
-		error_msg(ERR_ROWS);
 	close(fd);
-	check_walls_and_chars(map_file, map);
+	map->rows = map_rows;
+	return (make_matrix_solong(map_rows, argv[1]));
 }
 
-void	check_line(char	*line, t_map map, int rows)
+void	check_rect(char	**map_matrix, t_map	map)
+{
+	size_t	row_matrix;
+
+	row_matrix = 0;
+	while (map_matrix[row_matrix])
+	{
+		if (row_matrix == 0)
+			map.columns = (int)ft_strlen_mod(map_matrix[row_matrix]);
+		if ((int)ft_strlen_mod(map_matrix[row_matrix]) != map.columns)
+		{
+			free_matrix(map_matrix, map.rows);
+			error_msg(ERR_RECT);
+		}
+		check_walls_and_chars(map_matrix, &map, row_matrix);
+		row_matrix++;
+	}
+	//map.rows = row_matrix;//questo decommenta se non riesci a mettere assegnazione righe matrice in check_input
+}
+//mi pare questa non funzioni, mentre quelle prima si, controlla
+void	check_walls_and_chars(char	**mat, t_map *map, int l_cnt)
 {
 	char	*allowed;
-	int		l_cnt;
-	int		a_count;
+	int		c_cnt;
+	int		a_cnt;
 
-	l_cnt = 0;
-	while (line[l_cnt] != '\0' && line[l_cnt] != '\n')
+	c_cnt = -1;
+	while (mat[l_cnt][++c_cnt] != '\0' && mat[l_cnt][c_cnt] != '\n')
 	{
-		a_count = 0;
-		if (!rows || rows == map.rows || !l_cnt || l_cnt == (map.columns - 1))
+		a_cnt = -1;
+		if (mat[0][c_cnt] || mat[map->rows][c_cnt]
+			|| c_cnt == 0 || c_cnt == (map->columns - 1))
 			allowed = "1\0";
 		else
 			allowed = "10CEP\0";
-		while (allowed[a_count] != '\0')
+		while (allowed[++a_cnt] != '\0')
 		{
-			if (line[l_cnt] == allowed[a_count])
+			if (mat[l_cnt][c_cnt] == allowed[a_cnt])
 				break ;
-			a_count++;
-			if (allowed[a_count] == '\0')
+			if (allowed[a_cnt] == '\0')
 			{
-				free(line);
+				free_matrix(mat, map->rows);
 				error_msg(ERR_CHAR);
 			}
 		}
-		l_cnt++;
+		check_duplicates(mat, map, l_cnt);
 	}
 }
 
-void	check_walls_and_chars(char	*map_file, t_map	map)
+void	check_duplicates(char **map_matrix, t_map *map, int l_cnt)
 {
-	int		rows;
-	int		fd;
-	char	*line;
+	int	count;
 
-	rows = 0;
-	fd = open(map_file, O_RDONLY);
-	line = get_next_line(fd);
-	while (rows < map.rows)
+	count = 0;
+	while (count < map->columns)
 	{
-		check_line(line, map, rows);
-		rows++;
-		free(line);
-		line = get_next_line(fd);
+		if (map_matrix[l_cnt][count] == 'C')
+			map->collectible++;
+		if (map_matrix[l_cnt][count] == 'E')
+			map->exit++;
+		if (map_matrix[l_cnt][count] == 'P')
+			map->player++;
+		count++;
 	}
-	free(line);
-	close(fd);
+	if (l_cnt == map->rows)
+	{
+		if (map->collectible <= 0 || map->exit != 1 || map->player != 1)
+		{
+			free_matrix(map_matrix, map->rows);
+			error_msg(ERR_DUP_OR_MISS);
+		}
+	}
 }
+//testa le funzioni sopra, vedi se le modifiche hanno funzionato, poi finisci flood_fill e testala
+/* void	flood_fill(char **map_matrix, t_map map)//parti da posizione giocatore presa da t_map map
+{
+	l_cnt = ;
+	c_cnt = ;
+	if (map_matrix[l_cnt][c_cnt] == '1' || map_matrix[l_cnt][c_cnt] == 'X')
+		return ;
+	map_matrix[l_cnt][c_cnt] = 'X';
+	flood_fill(map_matrix, l_cnt + 1, c_cnt);
+	flood_fill(map_matrix, l_cnt - 1, c_cnt);
+	flood_fill(map_matrix, l_cnt, c_cnt + 1);
+	flood_fill(map_matrix, l_cnt, c_cnt - 1);
+	l_cnt = 0;
+	c_cnt = 0;
+	while (l_cnt < map.rows && c_cnt )//ciclo per controllare la mappa: se ci sono C, P o E allora errore
+	return ;
+} */
