@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:16:08 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/08/09 18:48:35 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/08/20 17:52:09 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef struct s_data
 	void		*win_ptr; // MLX window pointer
 	void		*textures[5]; // MLX image pointers (on the stack)
 	t_map		*map; // Map pointer (contains map details - preferably kept on the stack)
-}
+}				t_data;
 
 //checks.c
 void		error_msg(char *msg);

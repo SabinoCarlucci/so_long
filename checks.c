@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:08:22 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/08/09 18:51:17 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/08/20 22:39:17 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	check_walls_and_chars(char	**mat, t_map *map, int l_cnt)
 	while (mat[l_cnt][++c_cnt] != '\0' && mat[l_cnt][c_cnt] != '\n')
 	{
 		a_cnt = -1;
-		if (mat[0][c_cnt] || mat[map->rows][c_cnt]
+		if (l_cnt == 0 || l_cnt == map->rows - 1
 			|| c_cnt == 0 || c_cnt == (map->columns - 1))
 			allowed = "1\0";
 		else
@@ -80,7 +80,7 @@ void	check_walls_and_chars(char	**mat, t_map *map, int l_cnt)
 		{
 			if (mat[l_cnt][c_cnt] == allowed[a_cnt])
 				break ;
-			if (allowed[a_cnt] == '\0')
+			if (allowed[a_cnt + 1] == '\0')
 			{
 				free_matrix(mat, map->rows);
 				error_msg(ERR_CHAR);
