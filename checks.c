@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:08:22 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/08/20 22:39:17 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/08/24 14:37:40 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	**check_input(int argc, char **argv, t_map *map, char	*line)
 	return (make_matrix_solong(map_rows, argv[1]));
 }
 
-void	check_rect(char	**map_matrix, t_map	map)
+void	check_rect(char	**map_matrix, t_map	*map)
 {
 	size_t	row_matrix;
 
@@ -49,13 +49,13 @@ void	check_rect(char	**map_matrix, t_map	map)
 	while (map_matrix[row_matrix])
 	{
 		if (row_matrix == 0)
-			map.columns = (int)ft_strlen_mod(map_matrix[row_matrix]);
-		if ((int)ft_strlen_mod(map_matrix[row_matrix]) != map.columns)
+			map->columns = (int)ft_strlen_mod(map_matrix[row_matrix]);//togli da ciclo, tanto lo fai solo una volta
+		if ((int)ft_strlen_mod(map_matrix[row_matrix]) != map->columns)
 		{
-			free_matrix(map_matrix, map.rows);
+			free_matrix(map_matrix, map->rows);
 			error_msg(ERR_RECT);
 		}
-		check_walls_and_chars(map_matrix, &map, row_matrix);
+		check_walls_and_chars(map_matrix, map, row_matrix);
 		row_matrix++;
 	}
 	//map.rows = row_matrix;//questo decommenta se non riesci a mettere assegnazione righe matrice in check_input
@@ -86,24 +86,27 @@ void	check_walls_and_chars(char	**mat, t_map *map, int l_cnt)
 				error_msg(ERR_CHAR);
 			}
 		}
-		check_duplicates(mat, map, l_cnt);
 	}
 }
 
-void	check_duplicates(char **map_matrix, t_map *map, int l_cnt)
+void	check_duplicates(char **map_matrix, t_map *map, int	l_cnt)
 {
 	int	count;
 
-	count = 0;
-	while (count < map->columns)
+	while (l_cnt < map->rows)
 	{
-		if (map_matrix[l_cnt][count] == 'C')
-			map->collectible++;
-		if (map_matrix[l_cnt][count] == 'E')
-			map->exit++;
-		if (map_matrix[l_cnt][count] == 'P')
-			map->player++;
-		count++;
+		count = 0;
+		while (count < map->columns)
+		{
+			if (map_matrix[l_cnt][count] == 'C')
+				map->collectible++;
+			if (map_matrix[l_cnt][count] == 'E')
+				map->exit++;
+			if (map_matrix[l_cnt][count] == 'P')
+				map->player++;
+			count++;
+		}
+		l_cnt++;
 	}
 	if (l_cnt == map->rows)
 	{
