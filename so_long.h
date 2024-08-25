@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:16:08 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/08/24 14:06:24 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/08/25 23:37:18 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define ERR_RECT ": map not rectangular"
 # define ERR_CHAR ": invalid character in map"
 # define ERR_DUP_OR_MISS ": map needs at least 1 C and exactly 1 P and E"
+# define ERR_PATH ": no valid path from Player to Collectibles and Exit"
 
 typedef struct map//metti qui dentro la matrice in cui copi la mappa, sara' piu' facile lavorarci
 {
@@ -52,6 +53,8 @@ char		**check_input(int argc, char **argv, t_map *map, char	*line);
 void		check_rect(char	**map_matrix, t_map	*map_struct);
 void		check_walls_and_chars(char	**mat, t_map *map, int l_cnt);
 void		check_duplicates(char **map_matrix, t_map *map, int l_cnt);
+void		flood_fill(char **map_matrix, t_map *map, int	l_cnt, int	c_cnt);
+void		flood_fill_check(char **map_matrix, t_map *map, int	l_cnt, int	c_cnt);
 char		**make_matrix_solong(size_t	map_rows, char	*map_file);
 
 //utils.c

@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:08:22 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/08/24 14:37:40 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/08/25 23:46:00 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,20 +117,31 @@ void	check_duplicates(char **map_matrix, t_map *map, int	l_cnt)
 		}
 	}
 }
-//testa le funzioni sopra, vedi se le modifiche hanno funzionato, poi finisci flood_fill e testala
-/* void	flood_fill(char **map_matrix, t_map map)//parti da posizione giocatore presa da t_map map
+void	flood_fill(char **map_matrix, t_map *map, int	l_cnt, int	c_cnt)
 {
-	l_cnt = ;
-	c_cnt = ;
-	if (map_matrix[l_cnt][c_cnt] == '1' || map_matrix[l_cnt][c_cnt] == 'X')
+	if (map_matrix[l_cnt][c_cnt] == '1' || map_matrix[l_cnt][c_cnt] == 'x' || map_matrix[l_cnt][c_cnt] == 'N')
 		return ;
-	map_matrix[l_cnt][c_cnt] = 'X';
-	flood_fill(map_matrix, l_cnt + 1, c_cnt);
-	flood_fill(map_matrix, l_cnt - 1, c_cnt);
-	flood_fill(map_matrix, l_cnt, c_cnt + 1);
-	flood_fill(map_matrix, l_cnt, c_cnt - 1);
-	l_cnt = 0;
-	c_cnt = 0;
-	while (l_cnt < map.rows && c_cnt )//ciclo per controllare la mappa: se ci sono C, P o E allora errore
-	return ;
-} */
+	map_matrix[l_cnt][c_cnt] = 'x';
+	flood_fill(map_matrix, map, l_cnt + 1, c_cnt);
+	flood_fill(map_matrix, map, l_cnt - 1, c_cnt);
+	flood_fill(map_matrix, map, l_cnt, c_cnt + 1);
+	flood_fill(map_matrix, map, l_cnt, c_cnt - 1);
+}
+
+void	flood_fill_check(char **map_matrix, t_map *map, int	l_cnt, int	c_cnt)
+{
+	while (l_cnt < map->rows)
+	{
+		while (c_cnt < map->columns)
+		{
+			if (map_matrix[l_cnt][c_cnt] == 'C' || map_matrix[l_cnt][c_cnt] == 'E' || map_matrix[l_cnt][c_cnt] == 'P')
+			{
+				free_matrix(map_matrix, map->rows);
+				error_msg(ERR_PATH);
+			}
+			c_cnt++;
+		}
+		c_cnt = 0;
+		l_cnt++;
+	}
+}

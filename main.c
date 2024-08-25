@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 19:52:24 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/08/24 14:34:43 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/08/25 23:47:53 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,9 @@ int	main(int argc, char **argv)
 	map_matrix = check_input(argc, argv, map, line);
 	check_rect(map_matrix, map);
 	check_duplicates(map_matrix, map, 0);
+	flood_fill(map_matrix, map, 1, 1);
+	flood_fill_check(map_matrix, map, 0, 0);
+
+	free_matrix(map_matrix, map->rows);
 	return (0);
 }
