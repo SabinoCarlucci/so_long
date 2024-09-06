@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:08:22 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/08/25 23:46:00 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/06 12:58:25 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,26 +117,27 @@ void	check_duplicates(char **map_matrix, t_map *map, int	l_cnt)
 		}
 	}
 }
-void	flood_fill(char **map_matrix, t_map *map, int	l_cnt, int	c_cnt)
+void	flood_fill(char **copy_matrix, t_map *map, int	l_cnt, int	c_cnt)
 {
-	if (map_matrix[l_cnt][c_cnt] == '1' || map_matrix[l_cnt][c_cnt] == 'x' || map_matrix[l_cnt][c_cnt] == 'N')
+	if (copy_matrix[l_cnt][c_cnt] == '1' || copy_matrix[l_cnt][c_cnt] == 'x' || copy_matrix[l_cnt][c_cnt] == 'N')
 		return ;
-	map_matrix[l_cnt][c_cnt] = 'x';
-	flood_fill(map_matrix, map, l_cnt + 1, c_cnt);
-	flood_fill(map_matrix, map, l_cnt - 1, c_cnt);
-	flood_fill(map_matrix, map, l_cnt, c_cnt + 1);
-	flood_fill(map_matrix, map, l_cnt, c_cnt - 1);
+	copy_matrix[l_cnt][c_cnt] = 'x';
+	flood_fill(copy_matrix, map, l_cnt + 1, c_cnt);
+	flood_fill(copy_matrix, map, l_cnt - 1, c_cnt);
+	flood_fill(copy_matrix, map, l_cnt, c_cnt + 1);
+	flood_fill(copy_matrix, map, l_cnt, c_cnt - 1);
 }
 
-void	flood_fill_check(char **map_matrix, t_map *map, int	l_cnt, int	c_cnt)
+void	flood_fill_check(t_map *map, int	l_cnt, int	c_cnt)
 {
 	while (l_cnt < map->rows)
 	{
 		while (c_cnt < map->columns)
 		{
-			if (map_matrix[l_cnt][c_cnt] == 'C' || map_matrix[l_cnt][c_cnt] == 'E' || map_matrix[l_cnt][c_cnt] == 'P')
+			if (map->copy_matrix[l_cnt][c_cnt] == 'C' || map->copy_matrix[l_cnt][c_cnt] == 'E' || map->copy_matrix[l_cnt][c_cnt] == 'P')
 			{
-				free_matrix(map_matrix, map->rows);
+				free_matrix(map->copy_matrix, map->rows);
+				free_matrix(map->map_matrix, map->rows);
 				error_msg(ERR_PATH);
 			}
 			c_cnt++;
@@ -144,4 +145,19 @@ void	flood_fill_check(char **map_matrix, t_map *map, int	l_cnt, int	c_cnt)
 		c_cnt = 0;
 		l_cnt++;
 	}
+}
+
+char	**parsing(int argc, char **argv, t_data data)
+{
+	char	*line;
+
+	line = NULL;
+	data.map->map_matrix = check_input(argc, argv, data.map, line);
+	check_rect(data.map->map_matrix, data.map);
+	check_duplicates(data.map->map_matrix, data.map, 0);
+	data.map->copy_matrix = make_matrix_solong(data.map->rows, argv[1]);
+	flood_fill(data.map->copy_matrix, data.map, 1, 1);
+	flood_fill_check(data.map, 0, 0);
+	free_matrix(data.map->copy_matrix, data.map->rows);
+	return (data.map->map_matrix);
 }

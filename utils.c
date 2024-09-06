@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 19:11:44 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/08/24 12:45:25 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/06 12:01:14 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,20 @@ char	**make_matrix_solong(size_t	map_rows, char	*map_file)
 	return (out);
 }
 
-t_map	init_map_struct(void)
+t_map	*init_map_struct(void)
 {
-	t_map	map_struct;
+	t_map	*map_struct;
 
-	map_struct.rows = 0;
-	map_struct.columns = 0;
-	map_struct.collectible = 0;
-	map_struct.player = 0;
-	map_struct.exit = 0;
+	map_struct = malloc(sizeof(t_map));
+	if (!map_struct)
+		return (NULL);
+	map_struct->rows = 0;
+	map_struct->columns = 0;
+	map_struct->collectible = 0;
+	map_struct->player = 0;
+	map_struct->exit = 0;
+	map_struct->map_matrix = NULL;
+	map_struct->copy_matrix = NULL;
 	return (map_struct);
 }
 
