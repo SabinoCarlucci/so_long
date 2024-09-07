@@ -6,16 +6,18 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 19:11:44 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/06 12:01:14 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/07 11:55:01 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	error_msg(char *msg)
+void	error_msg(char *msg, t_data data)
 {
 	ft_printf("Error\n");
 	ft_printf("%s\n", msg);
+	if (data.map)//sostituisci con chiamata a funzione per fare free di tutto
+		free(data.map);
 	exit(1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 19:52:24 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/06 12:03:11 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/07 11:34:48 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,26 @@ void	load_textures(t_data *data)
 	data->textures[7] = NULL;
 }
 
+void	destroy_textures(t_data *data)
+{
+	int	textures_count;
+
+	textures_count = 0;
+	while (textures_count < NUM_ELE && data->textures[textures_count])
+	{
+		mlx_destroy_image(data->mlx_ptr, data->textures[textures_count]);
+		textures_count++;
+	}
+}
+
 int on_destroy(t_data *data)
 {
+	destroy_textures(data);
 	mlx_destroy_window(data->mlx_ptr, data->win_ptr);
 	mlx_destroy_display(data->mlx_ptr);
 	free(data->mlx_ptr);
+	free_matrix(data->map->map_matrix, data->map->rows);
+	free(data->map);
 	exit(0);
 	return (0);
 }
@@ -63,6 +78,8 @@ int on_keypress(int keysym, t_data *data)
 {
 	(void)data;
 	printf("Pressed key: %d\n", keysym);
+	if (keysym == 65307)
+		on_destroy(data);
 	return (0);
 }
 
@@ -84,11 +101,11 @@ int	main(int argc, char **argv)
 	}
 
 	load_textures(&data);//carica texture, amir lo fa dopo aver aperto finestra, ma pensa vada bene anche prima
-	//chiedi ad amir come funzionano le funzioni di controllo delle immagini caricate
-	
+
 	data.win_ptr = mlx_new_window(data.mlx_ptr, (data.map->rows * SIZE), (data.map->columns * SIZE), "I'm a window");
 	if (!data.win_ptr)
 	{
+		destroy_textures(&data);
 		free(data.map);
 		return (free(data.mlx_ptr), 1);//controlla che sia compatibile con i free della matrice e della copia
 	}
@@ -96,7 +113,7 @@ int	main(int argc, char **argv)
 	images_to_window(data.map->map_matrix, data, 0, 0);
 
 	// Register key press hook
-	mlx_hook(data.win_ptr, 2, 0, &on_keypress, &data);
+	mlx_hook(data.win_ptr, 2, 1L << 0, &on_keypress, &data);
 
 	// Register destroy hook
 	mlx_hook(data.win_ptr, 17, 0, &on_destroy, &data);
@@ -104,9 +121,9 @@ int	main(int argc, char **argv)
 	// Loop over the MLX pointer
 	mlx_loop(data.mlx_ptr);
 	
+	destroy_textures(&data);
 	free(data.mlx_ptr);
-	//free delle matrici
-	free_matrix(data.map->map_matrix, data.map->rows);
-	//free_matrix(copy_matrix, map->rows);
+	free_matrix(data.map->map_matrix, data.map->rows);//creare una funzione che libera tutto e farla chiamare sia qui che in error_msg
+	free(data.map);
 	return (0);
 }

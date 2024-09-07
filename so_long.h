@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:16:08 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/06 11:49:32 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/07 11:35:50 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@
 # define PLAYER "assets/P_player.xpm"
 # define ENEMY "assets/N_enemy.xpm"
 
+//definire valori tasti wasd, esc e frecce direzionali
+
 typedef struct map//metti qui dentro la matrice in cui copi la mappa, sara' piu' facile lavorarci
 {
 	int		rows;
@@ -62,19 +64,20 @@ typedef struct s_data
 
 //checks.c
 char		**parsing(int argc, char **argv, t_data data);
-void		error_msg(char *msg);
-char		**check_input(int argc, char **argv, t_map *map, char	*line);
-void		check_rect(char	**map_matrix, t_map	*map_struct);
-void		check_walls_and_chars(char	**mat, t_map *map, int l_cnt);
-void		check_duplicates(char **map_matrix, t_map *map, int l_cnt);
+void		error_msg(char *msg, t_data data);
+char		**check_input(int argc, char **argv, t_data data, char	*line);
+void		check_rect(char	**map_matrix, t_data data);
+void		check_walls_and_chars(char	**mat, t_data data, int l_cnt);
+void		check_duplicates(char **map_matrix, t_data data, int	l_cnt);
 void		flood_fill(char **map_matrix, t_map *map, int	l_cnt, int	c_cnt);
-void		flood_fill_check(t_map *map, int	l_cnt, int	c_cnt);
+void		flood_fill_check(t_data data, int	l_cnt, int	c_cnt);
 char		**make_matrix_solong(size_t	map_rows, char	*map_file);
 
 //utils.c
 t_map		*init_map_struct(void);
 size_t		ft_strlen_mod(const char *s);
 void		load_textures(t_data *data);
-void	images_to_window(char	**map_matrix, t_data	data, int	row, int	col);
+void		images_to_window(char	**map_matrix, t_data	data, int	row, int	col);
+void		destroy_textures(t_data *data);
 
 #endif
