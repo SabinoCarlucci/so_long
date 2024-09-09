@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/28 16:31:30 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/08/08 12:17:40 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/07 14:30:04 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,12 @@ char	**free_matrix(char **matrix, size_t sub_done)
 	count = 0;
 	while (count <= sub_done)
 	{
-		free(matrix[count]);
+		if (matrix[count])
+			free(matrix[count]);
 		count++;
 	}
 	free(matrix);
+	matrix = NULL;
 	return (NULL);
 }
 

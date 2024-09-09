@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 19:52:24 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/07 11:34:48 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/09 21:26:01 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,23 +62,26 @@ void	destroy_textures(t_data *data)
 	}
 }
 
-int on_destroy(t_data *data)
+int on_destroy(t_data *data)//cambiare in void se togli return per exit
 {
 	destroy_textures(data);
-	mlx_destroy_window(data->mlx_ptr, data->win_ptr);
-	mlx_destroy_display(data->mlx_ptr);
-	free(data->mlx_ptr);
-	free_matrix(data->map->map_matrix, data->map->rows);
-	free(data->map);
-	exit(0);
-	return (0);
+	if (data->win_ptr)
+		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+	if (data->mlx_ptr)
+	{
+		mlx_destroy_display(data->mlx_ptr);
+		free(data->mlx_ptr);
+	}
+	free_map(data);
+	exit(0);//ma se fa exit, poi fa resto di main? devo togliere exit?
+	return (0);//forse togliere perchè exit
 }
 
 int on_keypress(int keysym, t_data *data)
 {
-	(void)data;
-	printf("Pressed key: %d\n", keysym);
-	if (keysym == 65307)
+	//(void)data;//a che serve?
+	printf("Pressed key: %d\n", keysym);//togliere
+	if (keysym == KEY_ESC)
 		on_destroy(data);
 	return (0);
 }
@@ -123,7 +126,6 @@ int	main(int argc, char **argv)
 	
 	destroy_textures(&data);
 	free(data.mlx_ptr);
-	free_matrix(data.map->map_matrix, data.map->rows);//creare una funzione che libera tutto e farla chiamare sia qui che in error_msg
-	free(data.map);
+	free_map(&data);
 	return (0);
 }
