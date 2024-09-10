@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:08:22 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/09 21:15:08 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/10 21:02:49 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,8 @@ void	check_walls_and_chars(char	**mat, t_data data, int l_cnt)
 	}
 }
 
-void	check_duplicates(char **map_matrix, t_data data, int	l_cnt)
+void	check_duplicates(char **map_matrix, t_data data, int	l_cnt, int	count)
 {
-	int	count;
-
 	while (l_cnt < data.map->rows)
 	{
 		count = 0;
@@ -95,9 +93,17 @@ void	check_duplicates(char **map_matrix, t_data data, int	l_cnt)
 			if (map_matrix[l_cnt][count] == 'C')
 				data.map->collectible++;
 			if (map_matrix[l_cnt][count] == 'E')
+			{
 				data.map->exit++;
+				data.map->exit_p[0] = l_cnt;
+				data.map->exit_p[1] = count;
+			}
 			if (map_matrix[l_cnt][count] == 'P')
+			{
 				data.map->player++;
+				data.map->start_p[0] = l_cnt;
+				data.map->start_p[1] = count;
+			}
 			count++;
 		}
 		l_cnt++;
@@ -108,6 +114,7 @@ void	check_duplicates(char **map_matrix, t_data data, int	l_cnt)
 			error_msg(ERR_DUP_OR_MISS, data);
 	}
 }
+
 void	flood_fill(char **copy_matrix, t_map *map, int	l_cnt, int	c_cnt)
 {
 	if (copy_matrix[l_cnt][c_cnt] == '1' || copy_matrix[l_cnt][c_cnt] == 'x' || copy_matrix[l_cnt][c_cnt] == 'N')
@@ -145,7 +152,7 @@ char	**parsing(int argc, char **argv, t_data data)
 	line = NULL;
 	data.map->map_matrix = check_input(argc, argv, data, line);
 	check_rect(data.map->map_matrix, data);
-	check_duplicates(data.map->map_matrix, data, 0);
+	check_duplicates(data.map->map_matrix, data, 0, 0);
 	copy_matrix = make_matrix_solong(data.map->rows, argv[1]);
 	flood_fill(copy_matrix, data.map, 1, 1);
 	flood_fill_check(copy_matrix, data, 0, 0);

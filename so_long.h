@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:16:08 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/09 21:23:15 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/10 22:43:29 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,9 @@ typedef struct map
 	int		player;
 	int		exit;
 	char	**map_matrix;
-	char	*start_p;
-	char	*end_p;
+	int		moves;
+	int		start_p[2];//inizializzato in check_duplicates
+	int		exit_p[2];
 }				t_map;
 
 typedef struct s_data
@@ -82,7 +83,7 @@ void		free_map(t_data *data);
 char		**check_input(int argc, char **argv, t_data data, char	*line);
 void		check_rect(char	**map_matrix, t_data data);
 void		check_walls_and_chars(char	**mat, t_data data, int l_cnt);
-void		check_duplicates(char **map_matrix, t_data data, int	l_cnt);
+void		check_duplicates(char **map_matrix, t_data data, int	l_cnt, int	count);
 void		flood_fill(char **map_matrix, t_map *map, int	l_cnt, int	c_cnt);
 void		flood_fill_check(char	**copy_matrix, t_data data, int	l_cnt, int	c_cnt);
 char		**make_matrix_solong(size_t	map_rows, char	*map_file);
@@ -93,5 +94,12 @@ size_t		ft_strlen_mod(const char *s);
 void		load_textures(t_data *data);
 void		images_to_window(char	**map_matrix, t_data	data, int	row, int	col);
 void		destroy_textures(t_data *data);
+
+//map.c
+void		movement(int x, int y, t_data *data);
+void		update_map(char end, int finish_x, int finish_y, t_data *data);
+int 		on_destroy(t_data *data);
+int 		on_keypress(int keysym, t_data *data);
+
 
 #endif

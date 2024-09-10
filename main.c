@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 19:52:24 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/09 21:26:01 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/10 15:50:12 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,15 @@ void	images_to_window(char	**map_matrix, t_data	data, int	row, int	col)
 		while (map_matrix[row][col] != '\0' && map_matrix[row][col] != '\n')
 		{
 			if (map_matrix[row][col] == '0')
-				mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.textures[0], row * SIZE, col * SIZE);
+				mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.textures[0], col * SIZE, row * SIZE);
 			else if (map_matrix[row][col] == '1')
-				mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.textures[1], row * SIZE, col * SIZE);
+				mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.textures[1], col * SIZE, row * SIZE);
 			else if (map_matrix[row][col] == 'C')
-				mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.textures[2], row * SIZE, col * SIZE);
+				mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.textures[2], col * SIZE, row * SIZE);
 			else if (map_matrix[row][col] == 'E')
-				mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.textures[4], row * SIZE, col * SIZE);
+				mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.textures[4], col * SIZE, row * SIZE);
 			else if (map_matrix[row][col] == 'P')
-				mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.textures[5], row * SIZE, col * SIZE);
+				mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.textures[5], col * SIZE, row * SIZE);
 			col++;
 		}
 		row++;
@@ -83,6 +83,14 @@ int on_keypress(int keysym, t_data *data)
 	printf("Pressed key: %d\n", keysym);//togliere
 	if (keysym == KEY_ESC)
 		on_destroy(data);
+	else if (keysym == KEY_D || keysym == ARROW_RIGHT)
+		movement(0, 1, data);
+	else if (keysym == KEY_A || keysym == ARROW_LEFT)
+		movement(0, -1, data);
+	else if (keysym == KEY_W || keysym == ARROW_UP)
+		movement(-1, 0, data);
+	else if (keysym == KEY_S || keysym == ARROW_DOWN)
+		movement(1, 0, data);
 	return (0);
 }
 
@@ -105,7 +113,7 @@ int	main(int argc, char **argv)
 
 	load_textures(&data);//carica texture, amir lo fa dopo aver aperto finestra, ma pensa vada bene anche prima
 
-	data.win_ptr = mlx_new_window(data.mlx_ptr, (data.map->rows * SIZE), (data.map->columns * SIZE), "I'm a window");
+	data.win_ptr = mlx_new_window(data.mlx_ptr, (data.map->columns * SIZE), (data.map->rows * SIZE), "Stickman Adventure");
 	if (!data.win_ptr)
 	{
 		destroy_textures(&data);
