@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 19:11:44 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/10 16:44:11 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/12 19:20:53 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	free_map(t_data *data)
 	{
 		if (data->map->map_matrix)
 			free_matrix(data->map->map_matrix, data->map->rows);
-		free(data->map);//sempre per ultimo
+		free(data->map);
 		data->map = NULL;
 	}
 }
@@ -64,8 +64,8 @@ t_map	*init_map_struct(void)
 	if (!map_struct)
 		return (NULL);
 	map_struct->rows = 0;
-	map_struct->columns = 0;
-	map_struct->collectible = 0;
+	map_struct->col = 0;
+	map_struct->collect = 0;
 	map_struct->player = 0;
 	map_struct->exit = 0;
 	map_struct->map_matrix = NULL;

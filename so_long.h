@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:16:08 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/10 22:43:29 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/13 19:34:35 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,18 @@
 
 # define SIZE 50
 # define NUM_ELE 8
-//definire caratteri allowed per  check_walls_and_chars()
+
+//allowed characters
+# define ALLOWED "10CEP\0"
+# define ALLOWED_BONUS "10CEPN\0"
+# define ONLY_WALL "1\0"
 
 //textures
 # define EMPTY "assets/0_empty.xpm"
 # define WALL "assets/1_wall.xpm"
 # define COLLECT "assets/C_collectible.xpm"
-# define EXIT_OPEN "assets/E_exit(open).xpm"
-# define EXIT_CLOSED "assets/E_exit(closed).xpm"
+# define EXIT_OPEN "assets/E_exit_open.xpm"
+# define EXIT_CLOSED "assets/E_exit_closed.xpm"
 # define PLAYER "assets/P_player.xpm"
 # define ENEMY "assets/N_enemy.xpm"
 
@@ -58,48 +62,55 @@
 typedef struct map
 {
 	int		rows;
-	int		columns;
-	int		collectible;
+	int		col;
+	int		collect;
 	int		player;
 	int		exit;
 	char	**map_matrix;
 	int		moves;
-	int		start_p[2];//inizializzato in check_duplicates
+	int		start_p[2];
 	int		exit_p[2];
 }				t_map;
 
 typedef struct s_data
 {
-	void		*mlx_ptr; // MLX pointer
-	void		*win_ptr; // MLX window pointer
-	void		*textures[NUM_ELE]; // MLX image pointers (on the stack)
-	t_map		*map; // Map pointer (contains map details - preferably kept on the stack)
+	void		*mlx_ptr;
+	void		*win_ptr;
+	void		*txr[NUM_ELE];
+	t_map		*map;
 }				t_data;
 
-//checks.c
+//main.c
+int			close_game(t_data *data);
+int			on_keypress(int keysym, t_data *data);
 char		**parsing(int argc, char **argv, t_data data);
-void		error_msg(char *msg, t_data data);
-void		free_map(t_data *data);
+void		load_txr_and_open_window(t_data *data);
+//main
+
+//checks.c
 char		**check_input(int argc, char **argv, t_data data, char	*line);
 void		check_rect(char	**map_matrix, t_data data);
 void		check_walls_and_chars(char	**mat, t_data data, int l_cnt);
-void		check_duplicates(char **map_matrix, t_data data, int	l_cnt, int	count);
-void		flood_fill(char **map_matrix, t_map *map, int	l_cnt, int	c_cnt);
-void		flood_fill_check(char	**copy_matrix, t_data data, int	l_cnt, int	c_cnt);
-char		**make_matrix_solong(size_t	map_rows, char	*map_file);
+void		check_cep(char **map_matrix, t_data data, int l_cnt, int count);
+void		flood_fill(char **map_matrix, t_map *map, int l_cnt, int c_cnt);
+
+//leftover.c
+void		floodfill_check(char **copy_matrix, t_data data,
+				int l_cnt, int c_cnt);
+void		update_map_check(t_data *data, char end, int exit_x, int exit_y);
 
 //utils.c
+void		free_map(t_data *data);
+void		error_msg(char *msg, t_data data);
+char		**make_matrix_solong(size_t	map_rows, char	*map_file);
 t_map		*init_map_struct(void);
 size_t		ft_strlen_mod(const char *s);
-void		load_textures(t_data *data);
-void		images_to_window(char	**map_matrix, t_data	data, int	row, int	col);
-void		destroy_textures(t_data *data);
 
-//map.c
+//txr_and_movement.c
+void		images_to_window(char **map_matrix, t_data	data, int row, int col);
+void		load_textures(t_data *data);
+void		destroy_textures(t_data *data);
 void		movement(int x, int y, t_data *data);
 void		update_map(char end, int finish_x, int finish_y, t_data *data);
-int 		on_destroy(t_data *data);
-int 		on_keypress(int keysym, t_data *data);
-
 
 #endif

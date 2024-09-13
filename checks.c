@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:08:22 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/10 21:02:49 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:50:39 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	**check_input(int argc, char **argv, t_data data, char	*line)
 		map_rows++;
 		free(line);
 		line = get_next_line(fd);
-	}//se hai problemi di memoria, prova a chiamare get_next_line una volta extra per liberare buffer
+	}
 	close(fd);
 	data.map->rows = map_rows;
 	return (make_matrix_solong(map_rows, argv[1]));
@@ -46,18 +46,16 @@ void	check_rect(char	**map_matrix, t_data data)
 	size_t	row_matrix;
 
 	row_matrix = 0;
+	data.map->col = (int)ft_strlen_mod(map_matrix[row_matrix]);
 	while (map_matrix[row_matrix])
 	{
-		if (row_matrix == 0)
-			data.map->columns = (int)ft_strlen_mod(map_matrix[row_matrix]);//togli da ciclo, tanto lo fai solo una volta
-		if ((int)ft_strlen_mod(map_matrix[row_matrix]) != data.map->columns)
+		if ((int)ft_strlen_mod(map_matrix[row_matrix]) != data.map->col)
 			error_msg(ERR_RECT, data);
 		check_walls_and_chars(map_matrix, data, row_matrix);
 		row_matrix++;
 	}
-	//map.rows = row_matrix;//questo decommenta se non riesci a mettere assegnazione righe matrice in check_input
 }
-//mi pare questa non funzioni, mentre quelle prima si, controlla
+
 void	check_walls_and_chars(char	**mat, t_data data, int l_cnt)
 {
 	char	*allowed;
@@ -69,10 +67,10 @@ void	check_walls_and_chars(char	**mat, t_data data, int l_cnt)
 	{
 		a_cnt = -1;
 		if (l_cnt == 0 || l_cnt == data.map->rows - 1
-			|| c_cnt == 0 || c_cnt == (data.map->columns - 1))
-			allowed = "1\0";
+			|| c_cnt == 0 || c_cnt == (data.map->col - 1))
+			allowed = ONLY_WALL;
 		else
-			allowed = "10CEP\0";
+			allowed = ALLOWED;
 		while (allowed[++a_cnt] != '\0')
 		{
 			if (mat[l_cnt][c_cnt] == allowed[a_cnt])
@@ -83,22 +81,22 @@ void	check_walls_and_chars(char	**mat, t_data data, int l_cnt)
 	}
 }
 
-void	check_duplicates(char **map_matrix, t_data data, int	l_cnt, int	count)
+void	check_cep(char **map_matrix, t_data data, int l_cnt, int count)
 {
 	while (l_cnt < data.map->rows)
 	{
 		count = 0;
-		while (count < data.map->columns)
+		while (count < data.map->col)
 		{
 			if (map_matrix[l_cnt][count] == 'C')
-				data.map->collectible++;
-			if (map_matrix[l_cnt][count] == 'E')
+				data.map->collect++;
+			else if (map_matrix[l_cnt][count] == 'E')
 			{
 				data.map->exit++;
 				data.map->exit_p[0] = l_cnt;
 				data.map->exit_p[1] = count;
 			}
-			if (map_matrix[l_cnt][count] == 'P')
+			else if (map_matrix[l_cnt][count] == 'P')
 			{
 				data.map->player++;
 				data.map->start_p[0] = l_cnt;
@@ -108,54 +106,18 @@ void	check_duplicates(char **map_matrix, t_data data, int	l_cnt, int	count)
 		}
 		l_cnt++;
 	}
-	if (l_cnt == data.map->rows)
-	{
-		if (data.map->collectible <= 0 || data.map->exit != 1 || data.map->player != 1)
-			error_msg(ERR_DUP_OR_MISS, data);
-	}
+	if (data.map->collect <= 0 || data.map->exit != 1 || data.map->player != 1)
+		error_msg(ERR_DUP_OR_MISS, data);
 }
 
-void	flood_fill(char **copy_matrix, t_map *map, int	l_cnt, int	c_cnt)
+void	flood_fill(char **copy_matrix, t_map *map, int l_cnt, int c_cnt)
 {
-	if (copy_matrix[l_cnt][c_cnt] == '1' || copy_matrix[l_cnt][c_cnt] == 'x' || copy_matrix[l_cnt][c_cnt] == 'N')
+	if (copy_matrix[l_cnt][c_cnt] == '1' || copy_matrix[l_cnt][c_cnt] == 'x'
+		|| copy_matrix[l_cnt][c_cnt] == 'N')
 		return ;
 	copy_matrix[l_cnt][c_cnt] = 'x';
 	flood_fill(copy_matrix, map, l_cnt + 1, c_cnt);
 	flood_fill(copy_matrix, map, l_cnt - 1, c_cnt);
 	flood_fill(copy_matrix, map, l_cnt, c_cnt + 1);
 	flood_fill(copy_matrix, map, l_cnt, c_cnt - 1);
-}
-
-void	flood_fill_check(char	**copy_matrix, t_data data, int	l_cnt, int	c_cnt)
-{
-	while (l_cnt < data.map->rows)
-	{
-		while (c_cnt < data.map->columns)
-		{
-			if (copy_matrix[l_cnt][c_cnt] == 'C' || copy_matrix[l_cnt][c_cnt] == 'E' || copy_matrix[l_cnt][c_cnt] == 'P')
-			{
-				free_matrix(copy_matrix, data.map->rows);
-				error_msg(ERR_PATH, data);
-			}
-			c_cnt++;
-		}
-		c_cnt = 0;
-		l_cnt++;
-	}
-}
-
-char	**parsing(int argc, char **argv, t_data data)
-{
-	char	*line;
-	char	**copy_matrix;
-
-	line = NULL;
-	data.map->map_matrix = check_input(argc, argv, data, line);
-	check_rect(data.map->map_matrix, data);
-	check_duplicates(data.map->map_matrix, data, 0, 0);
-	copy_matrix = make_matrix_solong(data.map->rows, argv[1]);
-	flood_fill(copy_matrix, data.map, 1, 1);
-	flood_fill_check(copy_matrix, data, 0, 0);
-	free_matrix(copy_matrix, data.map->rows);//probabilmente problema, 
-	return (data.map->map_matrix);
 }

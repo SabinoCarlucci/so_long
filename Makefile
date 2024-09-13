@@ -9,7 +9,7 @@ BONUS_NAME = so_long_bonus
 MLX_DIR = mlx_linux/
 LFLAGS = -L$(MLX_DIR) -lmlx -lX11 -lXext -no-pie
 
-SRCS = main.c checks.c utils.c map.c
+SRCS = main.c checks.c leftover.c utils.c txr_and_movement.c
 OBJS = ${SRCS:.c=.o}
 
 BONUS = 
