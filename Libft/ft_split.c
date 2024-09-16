@@ -12,9 +12,6 @@
 
 #include "libft.h"
 
-//static char	**free_matrix(char **matrix, size_t sub_done);
-//static char	**make_matrix(char const *s_str, char sep, size_t n_str, int count);
-
 char	**free_matrix(char **matrix, size_t sub_done)
 {
 	size_t	count;
