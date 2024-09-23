@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:16:08 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/14 15:25:33 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/23 13:07:35 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define SO_LONG_H
 
 # include "Libft/libft.h"
-# include "mlx_linux/mlx.h"
+# include "minilibx-linux/mlx.h"
 # include <stddef.h>
 # include <stdio.h>
 # include <unistd.h>

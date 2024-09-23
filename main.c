@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 19:52:24 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/12 18:54:23 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/21 15:55:26 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ char	**parsing(int argc, char **argv, t_data data)
 	check_rect(data.map->map_matrix, data);
 	check_cep(data.map->map_matrix, data, 0, 0);
 	copy_matrix = make_matrix_solong(data.map->rows, argv[1]);
-	flood_fill(copy_matrix, data.map, 1, 1);
+	flood_fill(copy_matrix, data.map, data.map->start_p[0],
+		data.map->start_p[1]);
 	floodfill_check(copy_matrix, data, 0, 0);
 	free_matrix(copy_matrix, data.map->rows);
 	return (data.map->map_matrix);

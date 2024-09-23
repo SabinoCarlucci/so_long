@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:08:22 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/12 18:50:39 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/09/21 15:40:26 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,9 +112,13 @@ void	check_cep(char **map_matrix, t_data data, int l_cnt, int count)
 
 void	flood_fill(char **copy_matrix, t_map *map, int l_cnt, int c_cnt)
 {
-	if (copy_matrix[l_cnt][c_cnt] == '1' || copy_matrix[l_cnt][c_cnt] == 'E'
-		|| copy_matrix[l_cnt][c_cnt] == 'x')
+	if (copy_matrix[l_cnt][c_cnt] == '1' || copy_matrix[l_cnt][c_cnt] == 'x')
 		return ;
+	if (copy_matrix[l_cnt][c_cnt] == 'E')
+	{
+		copy_matrix[l_cnt][c_cnt] = 'x';
+		return ;
+	}
 	copy_matrix[l_cnt][c_cnt] = 'x';
 	flood_fill(copy_matrix, map, l_cnt + 1, c_cnt);
 	flood_fill(copy_matrix, map, l_cnt - 1, c_cnt);

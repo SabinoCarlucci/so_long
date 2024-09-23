@@ -6,7 +6,7 @@ NAME = so_long
 
 BONUS_NAME = so_long_bonus
 
-MLX_DIR = mlx_linux/
+MLX_DIR = minilibx-linux/
 LFLAGS = -L$(MLX_DIR) -lmlx -lX11 -lXext -no-pie
 
 SRCS = main.c checks.c leftover.c utils.c txr_and_movement.c
