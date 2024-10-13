@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   so_long.h                                          :+:      :+:    :+:   */
+/*   so_long_bonus.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:16:08 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/09/23 13:07:35 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/10/13 20:07:37 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SO_LONG_H
-# define SO_LONG_H
+#ifndef SO_LONG_BONUS_H
+# define SO_LONG_BONUS_H
 
-# include "Libft/libft.h"
-# include "minilibx-linux/mlx.h"
+# include "../Libft/libft.h"
+# include "../minilibx-linux/mlx.h"
 # include <stddef.h>
 # include <stdio.h>
 # include <unistd.h>
@@ -32,7 +32,7 @@
 # define ERR_PATH ": no valid path from Player to Collectibles and Exit"
 
 # define SIZE 50
-# define NUM_ELE 8
+# define NUM_ELE 10
 
 //allowed characters
 # define ALLOWED "10CEP\0"
@@ -43,10 +43,12 @@
 # define EMPTY "assets/0_empty.xpm"
 # define WALL "assets/1_wall.xpm"
 # define COLLECT "assets/C_collectible.xpm"
+# define COLLECT2 "assets/C_collectible2.xpm"
 # define EXIT_OPEN "assets/E_exit_open.xpm"
 # define EXIT_CLOSED "assets/E_exit_closed.xpm"
 # define PLAYER "assets/P_player.xpm"
 # define ENEMY "assets/N_enemy.xpm"
+# define ENEMY2 "assets/N_enemy2.xpm"
 
 //keysym
 # define KEY_ESC 65307
@@ -80,33 +82,36 @@ typedef struct s_data
 	t_map		*map;
 }				t_data;
 
-//main.c
+//main_bonus.c
 int			close_game(t_data *data);
 int			on_keypress(int keysym, t_data *data);
 char		**parsing(int argc, char **argv, t_data data);
 void		load_txr_and_open_window(t_data *data);
-//main
 
-//checks.c
+//checks_bonus.c
 char		**check_input(int argc, char **argv, t_data data, char	*line);
 void		check_rect(char	**map_matrix, t_data data);
 void		check_walls_and_chars(char	**mat, t_data data, int l_cnt);
 void		check_cep(char **map_matrix, t_data data, int l_cnt, int count);
 void		flood_fill(char **map_matrix, t_map *map, int l_cnt, int c_cnt);
 
-//leftover.c
+//leftover_bonus.c
 void		floodfill_check(char **copy_matrix, t_data data,
 				int l_cnt, int c_cnt);
 void		update_map_check(t_data *data, char end, int exit_x, int exit_y);
+void		animation(char **map_matrix, t_data *data, int l_cnt, int count);
+void		images_to_window2(char	**map_matrix, t_data	data,
+				int row, int col);
+void		count_moves(t_data *data);
 
-//utils.c
+//utils_bonus.c
 void		free_map(t_data *data);
 void		error_msg(char *msg, t_data data);
 char		**make_matrix_solong(size_t	map_rows, char	*map_file);
 t_map		*init_map_struct(void);
 size_t		ft_strlen_mod(const char *s);
 
-//txr_and_movement.c
+//txr_and_movement_bonus.c
 void		images_to_window(char **map_matrix, t_data	data, int row, int col);
 void		load_textures(t_data *data);
 void		destroy_textures(t_data *data);
