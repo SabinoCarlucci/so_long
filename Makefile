@@ -79,6 +79,6 @@ test: re
 	gdb ${NAME}
 
 testbonus: rebonus 
-	gdb ${BONUS_NAME}
+	gdb --args ${BONUS_NAME} maps/prova.ber
 
 .PHONY: all clean fclean re rebonus test testbonus

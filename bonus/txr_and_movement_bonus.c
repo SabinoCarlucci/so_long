@@ -6,7 +6,7 @@
 /*   By: scarlucc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 11:26:56 by scarlucc          #+#    #+#             */
-/*   Updated: 2024/10/13 20:03:41 by scarlucc         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:33:30 by scarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,13 @@ void	movement(int x, int y, t_data *data)
 		finish[1] = finish[1] - 1;
 	end = data->map->map_matrix[finish[0]][finish[1]];
 	if ((end == 'E' && data->map->collect == 0) || (end != '1' && end != 'E'))
+	{
 		count_moves(data);
-	update_map(end, finish[0], finish[1], data);
-	animation(data->map->map_matrix, data, 0, 0);
-	data->map->start_p[0] = finish[0];
-	data->map->start_p[1] = finish[1];
+		update_map(end, finish[0], finish[1], data);
+		animation(data->map->map_matrix, data, 0, 0);
+		data->map->start_p[0] = finish[0];
+		data->map->start_p[1] = finish[1];
+	}
 }
 
 void	update_map(char end, int finish_x, int finish_y, t_data *data)
